@@ -275,6 +275,13 @@ namespace TimeTracker
 
         private async Task DoSync()
         {
+            var confirm = MessageBox.Show("Synchroniser les tâches sélectionnées avec Jira?", "Time Tracker", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+
+            if (confirm != DialogResult.Yes)
+            {
+                return;
+            }
+
             List<object> events = GetSelectedEvents().ToList();
 
             trackerManager.UpdateLabel("Synchronisation en cours...");
