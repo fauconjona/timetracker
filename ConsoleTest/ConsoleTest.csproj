@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LowLevelInput.Net" Version="1.36.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\KeyLogger\KeyLogger.csproj" />
+  </ItemGroup>
+
+</Project>
