@@ -1,10 +1,6 @@
 using JiraTracker.Interaces;
-using JiraTracker.Services;
-using System.Runtime.InteropServices;
 using time.layer.objet.Interfaces;
 using time.layer.objet.Objets;
-using time.layer.objet.Services;
-using TimeTracker.Forms;
 using TimeTracker.Interfaces;
 
 namespace TimeTracker
@@ -348,6 +344,25 @@ namespace TimeTracker
         private void configButton_Click(object sender, EventArgs e)
         {
             Program.OpenConfig();
+        }
+
+        private void addButton_Click(object sender, EventArgs e)
+        {
+            List<object> events = GetSelectedEvents().ToList();
+
+            if (events.Count == 1 && events[0] is DateTime)
+            {
+                trackerManager.AddNewEvent((DateTime)events[0]);
+            }
+            else if (events.Count == 1 && events[0] is string && !string.IsNullOrEmpty(events[0] as string))
+            {
+                TrackerEvent? trackerEvent = eventService.GetEvent((string)events[0]);
+                trackerManager.AddNewEvent(trackerEvent?.End);
+            }
+            else
+            {
+                trackerManager.AddNewEvent();
+            }
         }
     }
 }

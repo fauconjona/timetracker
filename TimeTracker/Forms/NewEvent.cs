@@ -28,12 +28,25 @@ namespace TimeTracker
             TopMost = true;
             InitializeComponent();
 
-            dateTimeStart.CustomFormat = "HH:mm";
             dateTimeStart.Format = DateTimePickerFormat.Custom;
-            dateTimeStart.ShowUpDown = true;
-            dateTimeEnd.CustomFormat = "HH:mm";
             dateTimeEnd.Format = DateTimePickerFormat.Custom;
-            dateTimeEnd.ShowUpDown = true;
+
+            if (newEvent && isEdit)
+            {
+                dateTimeStart.CustomFormat = "dd/MM/yyyy HH:mm";
+                dateTimeStart.ShowUpDown = false;
+                dateTimeEnd.CustomFormat = "dd/MM/yyyy HH:mm";
+                dateTimeEnd.ShowUpDown = false;
+            }
+            else
+            {
+                dateTimeStart.CustomFormat = "HH:mm";
+                dateTimeStart.ShowUpDown = true;
+                dateTimeEnd.CustomFormat = "HH:mm";
+                dateTimeEnd.ShowUpDown = true;
+            }
+
+            
 
             if (trackerEvent != null)
             {
@@ -73,9 +86,13 @@ namespace TimeTracker
                 trackerEvent.End = dateTimeEnd.Value;
             }
             trackerEvent.Name = eventName.Text;
-            if (isEdit)
+            if (isEdit && !newEvent)
             {
                 trackerManager.Edit(trackerEvent);
+            }
+            else if (isEdit && newEvent)
+            {
+                trackerManager.Create(trackerEvent);
             }
             Close();
         }

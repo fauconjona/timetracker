@@ -45,6 +45,7 @@
             startStopButton = new Button();
             groupBox2 = new GroupBox();
             configButton = new Button();
+            addButton = new Button();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             SuspendLayout();
@@ -133,9 +134,9 @@
             // 
             // syncButton
             // 
-            syncButton.Location = new Point(6, 51);
+            syncButton.Location = new Point(155, 51);
             syncButton.Name = "syncButton";
-            syncButton.Size = new Size(297, 23);
+            syncButton.Size = new Size(148, 23);
             syncButton.TabIndex = 7;
             syncButton.Text = "Synchroniser avec Jira";
             syncButton.UseVisualStyleBackColor = true;
@@ -187,6 +188,7 @@
             // 
             // groupBox2
             // 
+            groupBox2.Controls.Add(addButton);
             groupBox2.Controls.Add(editEvent);
             groupBox2.Controls.Add(deleteEvent);
             groupBox2.Controls.Add(syncButton);
@@ -207,6 +209,16 @@
             configButton.Text = "Options";
             configButton.UseVisualStyleBackColor = true;
             configButton.Click += configButton_Click;
+            // 
+            // addButton
+            // 
+            addButton.Location = new Point(6, 51);
+            addButton.Name = "addButton";
+            addButton.Size = new Size(148, 23);
+            addButton.TabIndex = 8;
+            addButton.Text = "Ajouter";
+            addButton.UseVisualStyleBackColor = true;
+            addButton.Click += addButton_Click;
             // 
             // TimeTracker
             // 
@@ -250,5 +262,6 @@
         private GroupBox groupBox2;
         public Button cancelButton;
         private Button configButton;
+        private Button addButton;
     }
 }

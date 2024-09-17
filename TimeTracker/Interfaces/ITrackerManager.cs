@@ -33,11 +33,24 @@ namespace TimeTracker.Interfaces
         void Edit(TrackerEvent trackerEvent);
 
         /// <summary>
+        /// Create new event
+        /// </summary>
+        /// <param name="trackerEvent"></param>
+        void Create(TrackerEvent trackerEvent);
+
+        /// <summary>
         /// Open a new event dialog
         /// </summary>
         /// <param name="start"></param>
         /// <param name="name"></param>
         void OpenNewEvent(DateTime? start = null, string name = "New Event");
+
+        /// <summary>
+        /// Open new event dialog to create a custom event
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="name"></param>
+        void AddNewEvent(DateTime? start = null, string name = "New Event");
 
         /// <summary>
         /// Start the tracker from the last event of the day

@@ -118,6 +118,16 @@ namespace TimeTracker.Services
             RefreshButtons();
         }
 
+        public void Create(TrackerEvent trackerEvent)
+        {
+            eventService.AddEvent(trackerEvent);
+            form?.Invoke(new Action(() =>
+            {
+                form?.RefreshEvents();
+            }));
+            RefreshButtons();
+        }
+
         private void SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
             var config = eventService.GetConfig();
@@ -163,6 +173,25 @@ namespace TimeTracker.Services
                 Name = name
             };
             NewEvent newEventForm = new NewEvent(this, currentEvent);
+            newEventForm.ShowDialog();
+            UpdateLabel();
+            RefreshButtons();
+        }
+
+        public void AddNewEvent(DateTime? start = null, string name = "New Event")
+        {
+            if (start == null)
+            {
+                start = DateTime.Now;
+            }
+            var newEvent = new TrackerEvent
+            {
+                Guid = Guid.NewGuid().ToString(),
+                Start = start.Value,
+                End = start.Value,
+                Name = name
+            };
+            NewEvent newEventForm = new NewEvent(this, newEvent, true, true);
             newEventForm.ShowDialog();
             UpdateLabel();
             RefreshButtons();
