@@ -44,7 +44,7 @@ namespace TimeTracker
             try
             {
                 var config = eventService.GetConfig();
-                jiraService.Initialize(config.url, config.login, config.token, config.project, config.GetAliases());
+                jiraService.Initialize(config.url, config.login, config.token, config.project);
             }
             catch (Exception e)
             {

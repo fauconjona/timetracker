@@ -57,9 +57,9 @@ namespace time.layer.objet.Interfaces
         /// Merge events into one
         /// </summary>
         /// <param name="events"></param>
-        /// <param name="title"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
-        TrackerEvent MergeEvents(List<TrackerEvent> events, string title);
+        TrackerEvent MergeEvents(List<TrackerEvent> events, TrackerEvent model);
 
         /// <summary>
         /// Get the last event of the current day

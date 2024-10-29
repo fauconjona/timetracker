@@ -10,15 +10,18 @@ namespace JiraTracker.Services
     {
         private Jira jira;
         private Project? project;
-        private Dictionary<string, string> Aliases = new Dictionary<string, string>();
 
         public JiraService()
         {
             Console.WriteLine("JiraService created");
         }
 
-        public void Initialize(string url, string login, string token, string projectKey, Dictionary<string, string>? aliases = null)
+        public void Initialize(string url, string login, string token, string projectKey)
         {
+            if (string.IsNullOrEmpty(url))
+            {
+                return;
+            }
             this.jira = Jira.CreateRestClient(url, login, token);
 
             var projects = this.jira.Projects.GetProjectsAsync().Result;
@@ -35,22 +38,12 @@ namespace JiraTracker.Services
                 throw new Exception("Project not found");
             }
 
-            if (aliases != null)
-            {
-                this.Aliases = aliases;
-            }
-
             Console.WriteLine("Project found: " + this.project.Name);
         }
         public async Task<bool> AddWorklog(string key, DateTime start, DateTime end)
         {
             Console.WriteLine($"AddWorklog: {key} {start} {end}");
             string ticket = key;
-
-            if (Aliases.ContainsKey(key))
-            {
-                ticket = Aliases[key];
-            }
 
             Issue? issue = await FindIssueByKey(ticket);
 

@@ -43,14 +43,14 @@ namespace TimeTracker.Interfaces
         /// </summary>
         /// <param name="start"></param>
         /// <param name="name"></param>
-        void OpenNewEvent(DateTime? start = null, string name = "New Event");
+        void OpenNewEvent(DateTime? start = null);
 
         /// <summary>
         /// Open new event dialog to create a custom event
         /// </summary>
         /// <param name="start"></param>
         /// <param name="name"></param>
-        void AddNewEvent(DateTime? start = null, string name = "New Event");
+        void AddNewEvent(DateTime? start = null);
 
         /// <summary>
         /// Start the tracker from the last event of the day

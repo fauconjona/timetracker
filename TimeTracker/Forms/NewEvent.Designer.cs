@@ -36,18 +36,25 @@
             dateTimeEnd = new DateTimePicker();
             startLabel = new Label();
             endLabel = new Label();
+            typeComboBox = new ComboBox();
+            typeLabel = new Label();
+            ticketLabel = new Label();
+            ticketTextBox = new TextBox();
+            ticletLabel = new Label();
+            descriptionTextBox = new TextBox();
+            descriptionLabel = new Label();
             SuspendLayout();
             // 
             // eventName
             // 
-            eventName.Location = new Point(12, 44);
+            eventName.Location = new Point(433, 41);
             eventName.Name = "eventName";
-            eventName.Size = new Size(575, 23);
+            eventName.Size = new Size(154, 23);
             eventName.TabIndex = 1;
             // 
             // submit
             // 
-            submit.Location = new Point(390, 70);
+            submit.Location = new Point(390, 99);
             submit.Name = "submit";
             submit.Size = new Size(197, 26);
             submit.TabIndex = 2;
@@ -57,7 +64,7 @@
             // 
             // cancel
             // 
-            cancel.Location = new Point(12, 73);
+            cancel.Location = new Point(12, 99);
             cancel.Name = "cancel";
             cancel.Size = new Size(197, 26);
             cancel.TabIndex = 3;
@@ -98,13 +105,79 @@
             endLabel.TabIndex = 7;
             endLabel.Text = "Fin: ";
             // 
+            // typeComboBox
+            // 
+            typeComboBox.FormattingEnabled = true;
+            typeComboBox.Location = new Point(52, 41);
+            typeComboBox.Name = "typeComboBox";
+            typeComboBox.Size = new Size(155, 23);
+            typeComboBox.TabIndex = 8;
+            typeComboBox.SelectedIndexChanged += typeComboBox_SelectedIndexChanged;
+            // 
+            // typeLabel
+            // 
+            typeLabel.AutoSize = true;
+            typeLabel.Location = new Point(12, 44);
+            typeLabel.Name = "typeLabel";
+            typeLabel.Size = new Size(34, 15);
+            typeLabel.TabIndex = 9;
+            typeLabel.Text = "Type:";
+            // 
+            // ticketLabel
+            // 
+            ticketLabel.AutoSize = true;
+            ticketLabel.Location = new Point(213, 44);
+            ticketLabel.Name = "ticketLabel";
+            ticketLabel.Size = new Size(41, 15);
+            ticketLabel.TabIndex = 10;
+            ticketLabel.Text = "Ticket:";
+            // 
+            // ticketTextBox
+            // 
+            ticketTextBox.Location = new Point(260, 41);
+            ticketTextBox.Name = "ticketTextBox";
+            ticketTextBox.Size = new Size(128, 23);
+            ticketTextBox.TabIndex = 11;
+            // 
+            // ticletLabel
+            // 
+            ticletLabel.AutoSize = true;
+            ticletLabel.Location = new Point(394, 44);
+            ticletLabel.Name = "ticletLabel";
+            ticletLabel.Size = new Size(33, 15);
+            ticletLabel.TabIndex = 12;
+            ticletLabel.Text = "Titre:";
+            // 
+            // descriptionTextBox
+            // 
+            descriptionTextBox.Location = new Point(88, 70);
+            descriptionTextBox.Name = "descriptionTextBox";
+            descriptionTextBox.Size = new Size(500, 23);
+            descriptionTextBox.TabIndex = 13;
+            // 
+            // descriptionLabel
+            // 
+            descriptionLabel.AutoSize = true;
+            descriptionLabel.Location = new Point(12, 73);
+            descriptionLabel.Name = "descriptionLabel";
+            descriptionLabel.Size = new Size(70, 15);
+            descriptionLabel.TabIndex = 14;
+            descriptionLabel.Text = "Description:";
+            // 
             // NewEvent
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoValidate = AutoValidate.EnablePreventFocusChange;
-            ClientSize = new Size(600, 108);
+            ClientSize = new Size(600, 133);
             ControlBox = false;
+            Controls.Add(descriptionLabel);
+            Controls.Add(descriptionTextBox);
+            Controls.Add(ticletLabel);
+            Controls.Add(ticketTextBox);
+            Controls.Add(ticketLabel);
+            Controls.Add(typeLabel);
+            Controls.Add(typeComboBox);
             Controls.Add(endLabel);
             Controls.Add(startLabel);
             Controls.Add(dateTimeEnd);
@@ -134,5 +207,12 @@
         private DateTimePicker dateTimeEnd;
         private Label startLabel;
         private Label endLabel;
+        private ComboBox typeComboBox;
+        private Label typeLabel;
+        private Label ticketLabel;
+        private TextBox ticketTextBox;
+        private Label ticletLabel;
+        private TextBox descriptionTextBox;
+        private Label descriptionLabel;
     }
 }

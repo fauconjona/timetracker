@@ -8,7 +8,7 @@ namespace JiraTracker.Interaces
 {
     public interface IJiraService
     {
-        void Initialize(string url, string login, string token, string project, Dictionary<string, string>? aliases = null);
+        void Initialize(string url, string login, string token, string project);
         Task<bool> AddWorklog(string key, DateTime start, DateTime end);
     }
 }

@@ -22,6 +22,7 @@ namespace TimeTracker.Forms
         private readonly IJiraService jiraService;
         private readonly ITrackerManager trackerManager;
         private List<TrackerConfig.Alias> Aliases = new List<TrackerConfig.Alias>();
+        private bool aliasesChanged = false;
 
         public ConfigForm(IEventService eventService, IJiraService jiraService, ITrackerManager trackerManager)
         {
@@ -99,9 +100,12 @@ namespace TimeTracker.Forms
             };
 
             eventService.UpdateConfig(config);
-            jiraService.Initialize(config.url, config.login, config.token, config.project, config.GetAliases());
+            jiraService.Initialize(config.url, config.login, config.token, config.project);
             trackerManager.RefreshKeys();
-            trackerManager.MigrateEvents(true);
+            if (aliasesChanged)
+            {
+                trackerManager.MigrateEvents(true);
+            }
             this.Close();
         }
 
@@ -150,6 +154,8 @@ namespace TimeTracker.Forms
                 Aliases[index].value = value;
             }
 
+            aliasesChanged = true;
+
             RefreshAliases();
         }
 
@@ -161,6 +167,8 @@ namespace TimeTracker.Forms
             {
                 Aliases.RemoveAt(index);
             }
+
+            aliasesChanged = true;
 
             RefreshAliases();
         }

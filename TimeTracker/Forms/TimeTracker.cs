@@ -193,7 +193,7 @@ namespace TimeTracker
                 TrackerEvent? trackerEvent = eventService.GetEvent((string)tag);
                 if (trackerEvent != null)
                 {
-                    var result = MessageBox.Show($"Supprimer \"{trackerEvent.Name}\"?", "Time Tracker", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    var result = MessageBox.Show($"Supprimer \"{trackerEvent}\"?", "Time Tracker", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                     if (result == DialogResult.Yes)
                     {
                         eventService.DeleteEvent(trackerEvent);
@@ -245,7 +245,7 @@ namespace TimeTracker
             }
 
             // confirm merge
-            string eventsNames = string.Join(", ", eventsList.Select(e => e.Name));
+            string eventsNames = string.Join(", ", eventsList);
 
             var result = MessageBox.Show($"Fusionner les tâches suivants: {eventsNames}?", "Time Tracker", MessageBoxButtons.YesNo, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
@@ -255,7 +255,7 @@ namespace TimeTracker
             }
 
             //merge events
-            eventService.MergeEvents(eventsList, eventsList[0].Name);
+            eventService.MergeEvents(eventsList, eventsList[0]);
             RefreshEvents();
         }
 
@@ -289,12 +289,7 @@ namespace TimeTracker
                     if (tag is string && !string.IsNullOrEmpty(tag as string))
                     {
                         TrackerEvent? trackerEvent = eventService.GetEvent((string)tag);
-                        if (trackerEvent != null && !trackerEvent.Sync)
-                        {
-                            Console.WriteLine($"Syncing {trackerEvent.Name}");
-                            trackerEvent.Sync = await jiraService.AddWorklog(trackerEvent.Name, trackerEvent.Start, trackerEvent.End ?? DateTime.Now);
-                            eventService.UpdateEvent(trackerEvent);
-                        }
+                        await SyncEvent(trackerEvent);
                     }
 
                     if (tag is DateTime)
@@ -302,12 +297,7 @@ namespace TimeTracker
                         List<TrackerEvent> dayEvents = eventService.GetEvents((DateTime)tag);
                         foreach (var trackerEvent in dayEvents)
                         {
-                            if (!trackerEvent.Sync)
-                            {
-                                Console.WriteLine($"Syncing {trackerEvent.Name}");
-                                trackerEvent.Sync = await jiraService.AddWorklog(trackerEvent.Name, trackerEvent.Start, trackerEvent.End ?? DateTime.Now);
-                                eventService.UpdateEvent(trackerEvent);
-                            }
+                            await SyncEvent(trackerEvent);
                         }
                     }
                 }
@@ -324,6 +314,37 @@ namespace TimeTracker
             {
                 RefreshEvents();
             }));
+        }
+
+        private async Task<bool> SyncEvent(TrackerEvent? trackerEvent)
+        {
+            if (trackerEvent is null || trackerEvent.Sync)
+            {
+                return false;
+            }
+
+            if (trackerEvent.IsJira)
+            {
+                if (!string.IsNullOrEmpty(trackerEvent.Ticket))
+                {
+                    trackerEvent.Sync = await jiraService.AddWorklog(trackerEvent.Ticket, trackerEvent.Start, trackerEvent.End ?? DateTime.Now);
+                    eventService.UpdateEvent(trackerEvent);
+                    return trackerEvent.Sync;
+                }
+                else
+                {
+                    trackerEvent.Sync = await jiraService.AddWorklog(trackerEvent.Name, trackerEvent.Start, trackerEvent.End ?? DateTime.Now);
+                    if (trackerEvent.Sync)
+                    {
+                        trackerEvent.Ticket = trackerEvent.Name;
+                        trackerEvent.Name = "Ticket";
+                        eventService.UpdateEvent(trackerEvent);
+                    }
+                    return trackerEvent.Sync;
+                }
+            }
+
+            return false;
         }
 
         private void startStopButton_Click(object sender, EventArgs e)

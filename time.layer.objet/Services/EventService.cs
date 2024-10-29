@@ -99,14 +99,19 @@ namespace time.layer.objet.Services
             }
         }
 
-        public TrackerEvent MergeEvents(List<TrackerEvent> events, string title)
+        public TrackerEvent MergeEvents(List<TrackerEvent> events, TrackerEvent model)
         {
             DateTime start = events.Min(e => e.Start);
             DateTime end = events.Max(e => e.End!.Value);
             TrackerEvent trackerEvent = new TrackerEvent
             {
                 Guid = Guid.NewGuid().ToString(),
-                Name = title,
+                Name = model.Name,
+                Ticket = model.Ticket,
+                Project = model.Project,
+                Key = model.Key,
+                Description = model.Description,
+                IsJira = model.IsJira,
                 Start = start,
                 End = end,
                 Sync = false
@@ -170,10 +175,16 @@ namespace time.layer.objet.Services
 
             foreach (var dayPair in events)
             {
-                var dayEvents = dayPair.Value.Where(e => e.IsJira && string.IsNullOrEmpty(e.Ticket));
+                var dayEvents = dayPair.Value.Where(e => e.IsJira && string.IsNullOrEmpty(e.Ticket) && !string.IsNullOrEmpty(e.Name));
 
                 foreach (var trackerEvent in dayEvents)
                 {
+                    if (string.IsNullOrEmpty(trackerEvent.Key))
+                    {
+                        trackerEvent.Key = trackerEvent.Name;
+                        UpdateEvent(trackerEvent);
+                    }
+
                     if (trackerEvent.Name == "Pause")
                     {
                         trackerEvent.IsJira = false;
@@ -183,7 +194,7 @@ namespace time.layer.objet.Services
 
                     if (config != null && config.aliases != null)
                     {
-                        var alias = config.aliases.FirstOrDefault(a => a.name == trackerEvent.Name);
+                        var alias = config.aliases.FirstOrDefault(a => a.name == trackerEvent.Key);
 
                         if (alias != null)
                         {

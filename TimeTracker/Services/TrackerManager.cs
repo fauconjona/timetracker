@@ -83,7 +83,7 @@ namespace TimeTracker.Services
             bool cancel = true;
             if (currentEvent != null && prompt)
             {
-                var result = MessageBox.Show($"Annuler \"{currentEvent.Name}\"?", "Time Tracker", MessageBoxButtons.OKCancel, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                var result = MessageBox.Show($"Annuler \"{currentEvent}\"?", "Time Tracker", MessageBoxButtons.OKCancel, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 cancel = result == DialogResult.OK;
             }
 
@@ -160,7 +160,7 @@ namespace TimeTracker.Services
             }
         }
 
-        public void OpenNewEvent(DateTime? start = null, string name = "New Event")
+        public void OpenNewEvent(DateTime? start = null)
         {
             if (start == null)
             {
@@ -169,8 +169,7 @@ namespace TimeTracker.Services
             currentEvent = new TrackerEvent
             {
                 Guid = Guid.NewGuid().ToString(),
-                Start = start.Value,
-                Name = name
+                Start = start.Value
             };
             NewEvent newEventForm = new NewEvent(this, currentEvent);
             newEventForm.ShowDialog();
@@ -178,7 +177,7 @@ namespace TimeTracker.Services
             RefreshButtons();
         }
 
-        public void AddNewEvent(DateTime? start = null, string name = "New Event")
+        public void AddNewEvent(DateTime? start = null)
         {
             if (start == null)
             {
@@ -188,8 +187,7 @@ namespace TimeTracker.Services
             {
                 Guid = Guid.NewGuid().ToString(),
                 Start = start.Value,
-                End = start.Value,
-                Name = name
+                End = start.Value
             };
             NewEvent newEventForm = new NewEvent(this, newEvent, true, true);
             newEventForm.ShowDialog();
@@ -207,7 +205,7 @@ namespace TimeTracker.Services
                 } 
                 else
                 {
-                    form.progressLabel.Text = currentEvent == null ? "Aucune tâche en cours" : $"En cours: {currentEvent.Name} depuis {currentEvent.Start:t}";
+                    form.progressLabel.Text = currentEvent == null ? "Aucune tâche en cours" : $"En cours: {currentEvent} depuis {currentEvent.Start:t}";
                 }
             }));
         }
@@ -232,7 +230,7 @@ namespace TimeTracker.Services
             {
                 currentEvent.End = DateTime.Now;
                 // open windows alert box top most
-                var result = MessageBox.Show($"{currentEvent.Name}: Début: {currentEvent.Start:t} / Fin: {currentEvent.End:t} / Durée: {(currentEvent.End!.Value - currentEvent.Start).ToString(@"hh\:mm")}", "Time Tracker", MessageBoxButtons.OKCancel, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                var result = MessageBox.Show(currentEvent.ToString(), "Time Tracker", MessageBoxButtons.OKCancel, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 if (result == DialogResult.OK)
                 {
                     Submit();
@@ -268,7 +266,7 @@ namespace TimeTracker.Services
         {
             eventService.MigrateEvents();
 
-            if (!refresh)
+            if (refresh)
             {
                 form?.Invoke(new Action(() =>
                 {
@@ -295,14 +293,16 @@ namespace TimeTracker.Services
                     Guid = Guid.NewGuid().ToString(),
                     Start = sessionLock!.Value,
                     End = DateTime.Now,
-                    Name = "Pause"
+                    Key = "Pause",
+                    Name = "Pause",
+                    IsJira = false
                 };
                 Submit();
             }
 
             if (lastEvent != null)
             {
-                var message = string.Format("Reprendre la dernière tâche \"{0}\"?", lastEvent?.Name);
+                var message = string.Format("Reprendre la dernière tâche \"{0}\"?", lastEvent);
                 result = MessageBox.Show(message, "Time Tracker", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
                 if (result == DialogResult.Cancel)
@@ -318,7 +318,12 @@ namespace TimeTracker.Services
                         {
                             Guid = Guid.NewGuid().ToString(),
                             Start = DateTime.Now,
-                            Name = lastEvent!.Name
+                            Name = lastEvent!.Name,
+                            Key = lastEvent.Key,
+                            Project = lastEvent.Project,
+                            Ticket = lastEvent.Ticket,
+                            Description = lastEvent.Description,
+                            IsJira = lastEvent.IsJira
                         };
                     }
                     else
@@ -344,7 +349,7 @@ namespace TimeTracker.Services
 
         private string GetKey(string key)
         {
-            var trackerKey = trackerKeys.FirstOrDefault(k => k.key == key);
+            var trackerKey = trackerKeys?.FirstOrDefault(k => k.key == key);
             return trackerKey?.value ?? string.Empty;
         }
 
