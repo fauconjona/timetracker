@@ -264,6 +264,19 @@ namespace TimeTracker.Services
             RefreshButtons();
         }
 
+        public void MigrateEvents(bool refresh = false)
+        {
+            eventService.MigrateEvents();
+
+            if (!refresh)
+            {
+                form?.Invoke(new Action(() =>
+                {
+                    form?.RefreshEvents();
+                }));
+            }
+        }
+
         #region private methods
 
         private void InitNewEvent()

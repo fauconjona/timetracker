@@ -50,9 +50,14 @@
             groupBox3 = new GroupBox();
             sessionCheckBox = new CheckBox();
             autoStartCheckBox = new CheckBox();
+            AliasesGroupBox = new GroupBox();
+            deleteAliasButton = new Button();
+            addAliasButton = new Button();
+            AliasesListBox = new ListBox();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
+            AliasesGroupBox.SuspendLayout();
             SuspendLayout();
             // 
             // groupBox1
@@ -144,16 +149,16 @@
             groupBox2.Controls.Add(startShortcutTextBox);
             groupBox2.Controls.Add(editShortcutLabel);
             groupBox2.Controls.Add(startShortcutLabel);
-            groupBox2.Location = new Point(496, 79);
+            groupBox2.Location = new Point(259, 215);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(212, 130);
+            groupBox2.Size = new Size(231, 154);
             groupBox2.TabIndex = 1;
             groupBox2.TabStop = false;
             groupBox2.Text = "Raccourcis clavier";
             // 
             // cancelShortcutTextBox
             // 
-            cancelShortcutTextBox.Location = new Point(98, 68);
+            cancelShortcutTextBox.Location = new Point(98, 77);
             cancelShortcutTextBox.Name = "cancelShortcutTextBox";
             cancelShortcutTextBox.Size = new Size(108, 23);
             cancelShortcutTextBox.TabIndex = 5;
@@ -161,7 +166,7 @@
             // cancelShortchutLabel
             // 
             cancelShortchutLabel.AutoSize = true;
-            cancelShortchutLabel.Location = new Point(6, 76);
+            cancelShortchutLabel.Location = new Point(6, 80);
             cancelShortchutLabel.Name = "cancelShortchutLabel";
             cancelShortchutLabel.Size = new Size(52, 15);
             cancelShortchutLabel.TabIndex = 4;
@@ -169,14 +174,14 @@
             // 
             // editShortcutTextBox
             // 
-            editShortcutTextBox.Location = new Point(98, 39);
+            editShortcutTextBox.Location = new Point(98, 48);
             editShortcutTextBox.Name = "editShortcutTextBox";
             editShortcutTextBox.Size = new Size(108, 23);
             editShortcutTextBox.TabIndex = 3;
             // 
             // startShortcutTextBox
             // 
-            startShortcutTextBox.Location = new Point(98, 11);
+            startShortcutTextBox.Location = new Point(98, 19);
             startShortcutTextBox.Name = "startShortcutTextBox";
             startShortcutTextBox.Size = new Size(108, 23);
             startShortcutTextBox.TabIndex = 2;
@@ -184,7 +189,7 @@
             // editShortcutLabel
             // 
             editShortcutLabel.AutoSize = true;
-            editShortcutLabel.Location = new Point(6, 47);
+            editShortcutLabel.Location = new Point(6, 51);
             editShortcutLabel.Name = "editShortcutLabel";
             editShortcutLabel.Size = new Size(55, 15);
             editShortcutLabel.TabIndex = 1;
@@ -193,7 +198,7 @@
             // startShortcutLabel
             // 
             startShortcutLabel.AutoSize = true;
-            startShortcutLabel.Location = new Point(6, 19);
+            startShortcutLabel.Location = new Point(6, 22);
             startShortcutLabel.Name = "startShortcutLabel";
             startShortcutLabel.Size = new Size(63, 15);
             startShortcutLabel.TabIndex = 0;
@@ -201,7 +206,7 @@
             // 
             // saveButton
             // 
-            saveButton.Location = new Point(549, 215);
+            saveButton.Location = new Point(331, 375);
             saveButton.Name = "saveButton";
             saveButton.Size = new Size(159, 23);
             saveButton.TabIndex = 2;
@@ -211,7 +216,7 @@
             // 
             // cancelButton
             // 
-            cancelButton.Location = new Point(12, 215);
+            cancelButton.Location = new Point(12, 375);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new Size(159, 23);
             cancelButton.TabIndex = 3;
@@ -225,7 +230,7 @@
             groupBox3.Controls.Add(autoStartCheckBox);
             groupBox3.Location = new Point(12, 7);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(690, 53);
+            groupBox3.Size = new Size(478, 66);
             groupBox3.TabIndex = 4;
             groupBox3.TabStop = false;
             groupBox3.Text = "Tracker";
@@ -233,7 +238,7 @@
             // sessionCheckBox
             // 
             sessionCheckBox.AutoSize = true;
-            sessionCheckBox.Location = new Point(397, 22);
+            sessionCheckBox.Location = new Point(7, 41);
             sessionCheckBox.Name = "sessionCheckBox";
             sessionCheckBox.Size = new Size(287, 19);
             sessionCheckBox.TabIndex = 1;
@@ -243,19 +248,62 @@
             // autoStartCheckBox
             // 
             autoStartCheckBox.AutoSize = true;
-            autoStartCheckBox.Location = new Point(6, 22);
+            autoStartCheckBox.Location = new Point(7, 22);
             autoStartCheckBox.Name = "autoStartCheckBox";
             autoStartCheckBox.Size = new Size(228, 19);
             autoStartCheckBox.TabIndex = 0;
             autoStartCheckBox.Text = "Démarrer les tâches automatiquement";
             autoStartCheckBox.UseVisualStyleBackColor = true;
             // 
+            // AliasesGroupBox
+            // 
+            AliasesGroupBox.Controls.Add(deleteAliasButton);
+            AliasesGroupBox.Controls.Add(addAliasButton);
+            AliasesGroupBox.Controls.Add(AliasesListBox);
+            AliasesGroupBox.Location = new Point(12, 215);
+            AliasesGroupBox.Name = "AliasesGroupBox";
+            AliasesGroupBox.Size = new Size(241, 154);
+            AliasesGroupBox.TabIndex = 5;
+            AliasesGroupBox.TabStop = false;
+            AliasesGroupBox.Text = "Alias";
+            // 
+            // deleteAliasButton
+            // 
+            deleteAliasButton.Location = new Point(6, 125);
+            deleteAliasButton.Name = "deleteAliasButton";
+            deleteAliasButton.Size = new Size(108, 23);
+            deleteAliasButton.TabIndex = 2;
+            deleteAliasButton.Text = "Supprimer";
+            deleteAliasButton.UseVisualStyleBackColor = true;
+            deleteAliasButton.Click += deleteAliasButton_Click;
+            // 
+            // addAliasButton
+            // 
+            addAliasButton.Location = new Point(127, 125);
+            addAliasButton.Name = "addAliasButton";
+            addAliasButton.Size = new Size(108, 23);
+            addAliasButton.TabIndex = 1;
+            addAliasButton.Text = "Ajouter";
+            addAliasButton.UseVisualStyleBackColor = true;
+            addAliasButton.Click += addAliasButton_Click;
+            // 
+            // AliasesListBox
+            // 
+            AliasesListBox.FormattingEnabled = true;
+            AliasesListBox.ItemHeight = 15;
+            AliasesListBox.Location = new Point(6, 22);
+            AliasesListBox.Name = "AliasesListBox";
+            AliasesListBox.Size = new Size(228, 94);
+            AliasesListBox.TabIndex = 0;
+            AliasesListBox.DoubleClick += AliasesListBox_DoubleClick;
+            // 
             // ConfigForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(720, 250);
+            ClientSize = new Size(505, 410);
             ControlBox = false;
+            Controls.Add(AliasesGroupBox);
             Controls.Add(groupBox3);
             Controls.Add(cancelButton);
             Controls.Add(saveButton);
@@ -274,6 +322,7 @@
             groupBox2.PerformLayout();
             groupBox3.ResumeLayout(false);
             groupBox3.PerformLayout();
+            AliasesGroupBox.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -300,5 +349,9 @@
         private GroupBox groupBox3;
         private CheckBox sessionCheckBox;
         private CheckBox autoStartCheckBox;
+        private GroupBox AliasesGroupBox;
+        private ListBox AliasesListBox;
+        private Button addAliasButton;
+        private Button deleteAliasButton;
     }
 }

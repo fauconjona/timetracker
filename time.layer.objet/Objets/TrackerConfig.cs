@@ -17,10 +17,29 @@ namespace time.layer.objet.Objets
 
         public List<TrackerKey> keys { get; set; }
 
+        public List<Alias> aliases { get; set; }
+
+
         public class TrackerKey
         {
             public string key { get; set; }
             public string value { get; set; }
+        }
+
+        public class Alias
+        {
+            public string name { get; set; }
+            public string value { get; set; }
+
+            public override string ToString()
+            {
+                return $"{name} ({value})";
+            }
+        }
+
+        public Dictionary<string, string> GetAliases()
+        {
+            return aliases.ToDictionary(a => a.name, a => a.value);
         }
     }
 }

@@ -77,5 +77,11 @@ namespace TimeTracker.Interfaces
         /// Refresh the config keys
         /// </summary>
         void RefreshKeys();
+
+        /// <summary>
+        /// Migrate events to new format
+        /// </summary>
+        /// <param name="refresh">Refresh event list</param>
+        void MigrateEvents(bool refresh = false);
     }
 }

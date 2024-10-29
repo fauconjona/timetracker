@@ -78,5 +78,17 @@ namespace time.layer.objet.Interfaces
         /// </summary>
         /// <param name="config"></param>
         void UpdateConfig(TrackerConfig config);
+
+        /// <summary>
+        /// Check current version and migrate
+        /// </summary>
+        /// <param name="version"></param>
+        void CheckVersion(string version);
+
+        /// <summary>
+        /// Migrate events to new format with aliases
+        /// </summary>
+        /// <returns></returns>
+        Dictionary<DateTime, List<TrackerEvent>> MigrateEvents();
     }
 }

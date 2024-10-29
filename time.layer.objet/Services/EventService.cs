@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using time.layer.objet.Interfaces;
 using time.layer.objet.Objets;
 
 namespace time.layer.objet.Services
@@ -153,6 +154,76 @@ namespace time.layer.objet.Services
             SaveFile("config", json);
         }
 
+        public void CheckVersion(string version)
+        {
+            if (CompareVersions(GetVersion(), version) < 0)
+            {
+                MigrateEvents();
+                SetVersion(version);
+            }
+        }
+
+        public Dictionary<DateTime, List<TrackerEvent>> MigrateEvents()
+        {
+            var events = GetEvents();
+            var config = GetConfig();
+
+            foreach (var dayPair in events)
+            {
+                var dayEvents = dayPair.Value.Where(e => e.IsJira && string.IsNullOrEmpty(e.Ticket));
+
+                foreach (var trackerEvent in dayEvents)
+                {
+                    if (trackerEvent.Name == "Pause")
+                    {
+                        trackerEvent.IsJira = false;
+                        UpdateEvent(trackerEvent);
+                        continue;
+                    }
+
+                    if (config != null && config.aliases != null)
+                    {
+                        var alias = config.aliases.FirstOrDefault(a => a.name == trackerEvent.Name);
+
+                        if (alias != null)
+                        {
+                            trackerEvent.Ticket = alias.value;
+                            UpdateEvent(trackerEvent);
+                        }
+                    }
+                }
+            }
+
+            return events;
+        }
+
+        private string GetVersion()
+        {
+            InitFolder();
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TimeLayerObjet", "Events", ".version");
+
+            //read ".version" file 
+            if (File.Exists(path))
+            {
+                FileStream file = File.OpenRead(path);
+                byte[] bytes = new byte[file.Length];
+                file.Read(bytes, 0, (int)file.Length);
+                string version = Encoding.UTF8.GetString(bytes);
+                file.Close();
+                return version;
+            }
+
+            return string.Empty;
+        }
+
+        private string SetVersion(string version)
+        {
+            InitFolder();
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TimeLayerObjet", "Events", ".version");
+            File.WriteAllText(path, version);
+            return version;
+        }
+
         private static List<string> ListFiles()
         {
             InitFolder();
@@ -201,6 +272,15 @@ namespace time.layer.objet.Services
             InitFolder();
             string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "TimeLayerObjet", "Events", $"{day}.json");
             File.WriteAllText(path, content);
+        }
+
+        private int CompareVersions(string a, string b)
+        {
+            if (string.IsNullOrEmpty(a))
+            {
+                return -1;
+            }
+            return (new Version(a)).CompareTo(new Version(b));
         }
     }
 }

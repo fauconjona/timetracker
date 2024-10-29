@@ -2,6 +2,7 @@
 using JiraTracker.Interaces;
 using System.Globalization;
 using System.Text;
+using System.Xml.Linq;
 
 namespace JiraTracker.Services
 {
@@ -9,13 +10,14 @@ namespace JiraTracker.Services
     {
         private Jira jira;
         private Project? project;
+        private Dictionary<string, string> Aliases = new Dictionary<string, string>();
 
         public JiraService()
         {
             Console.WriteLine("JiraService created");
         }
 
-        public void Initialize(string url, string login, string token, string projectKey)
+        public void Initialize(string url, string login, string token, string projectKey, Dictionary<string, string>? aliases = null)
         {
             this.jira = Jira.CreateRestClient(url, login, token);
 
@@ -33,40 +35,24 @@ namespace JiraTracker.Services
                 throw new Exception("Project not found");
             }
 
+            if (aliases != null)
+            {
+                this.Aliases = aliases;
+            }
+
             Console.WriteLine("Project found: " + this.project.Name);
         }
-        public async Task<bool> AddWorklog(string name, DateTime start, DateTime end)
+        public async Task<bool> AddWorklog(string key, DateTime start, DateTime end)
         {
-            Console.WriteLine($"AddWorklog: {name} {start} {end}");
-            string cleanName = RemoveDiacritics(name.Trim().ToLower());
-            Issue? issue;
-            // find the issue by name
-            switch (cleanName)
+            Console.WriteLine($"AddWorklog: {key} {start} {end}");
+            string ticket = key;
+
+            if (Aliases.ContainsKey(key))
             {
-                case "reunion":
-                    issue = await FindRitualWithName("Réunion");
-                    break;
-                case "ds":
-                case "daily":
-                case "daily scrum":
-                    issue = await FindRitualWithName("Daily Scrum");
-                    break;
-                case "gestion de projet":
-                    issue = await FindRitualWithName("Gestion de projet");
-                    break;
-                case "autre":
-                    issue = await FindRitualWithName("Autre");
-                    break;
-                case "livraison":
-                    issue = await FindRitualWithName("Livraison");
-                    break;
-                case "pause":
-                    issue = null;
-                    break;
-                default:
-                    issue = await FindIssueByKey(name);
-                    break;
+                ticket = Aliases[key];
             }
+
+            Issue? issue = await FindIssueByKey(ticket);
 
             Console.WriteLine($"Issue found: {issue?.Key}");
 

@@ -4,6 +4,7 @@ using KeyLogger.Interfaces;
 using KeyLogger.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using time.layer.objet.Interfaces;
 using time.layer.objet.Services;
@@ -43,13 +44,21 @@ namespace TimeTracker
             try
             {
                 var config = eventService.GetConfig();
-                jiraService.Initialize(config.url, config.login, config.token, config.project);
+                jiraService.Initialize(config.url, config.login, config.token, config.project, config.GetAliases());
             }
             catch (Exception e)
             {
                 Console.WriteLine("JiraService.Initialize Error");
                 Console.WriteLine(e.Message);
             }
+
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            if (version == null)
+            {
+                Console.WriteLine("Version is null");
+                return;
+            }
+            eventService.CheckVersion(version.ToString());
 
             TimeTracker form = ServiceProvider.GetRequiredService<TimeTracker>();
 
@@ -76,8 +85,8 @@ namespace TimeTracker
 
         public static void OpenConfig()
         {
-            ConfigForm config = ServiceProvider.GetRequiredService<ConfigForm>();
-            config.ShowDialog();
+            var configForm = ServiceProvider.GetRequiredService<ConfigForm>();
+            configForm.ShowDialog();
         }
     }
 }
