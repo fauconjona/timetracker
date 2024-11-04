@@ -11,13 +11,24 @@ namespace time.layer.objet.Objets
         public string Guid { get; set; }
         public DateTime Start { get; set; }
         public DateTime? End { get; set; }
-        public string Key { get; set; } = string.Empty;
+        public int? AliasId { get; set; } = null;
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public string Ticket { get; set; }= string.Empty;
-        public string Project { get; set; } = string.Empty;
+        public string Ticket { get; set; } = string.Empty;
         public bool IsJira { get; set; } = true;
         public bool Sync { get; set; }
+
+        public TimeSpan Duration {
+            get
+            {
+                if (!IsJira)
+                {
+                    return TimeSpan.Zero;
+                }
+                return (End ?? DateTime.Now) - Start;
+            }
+        }
+
 
         public override string ToString()
         {

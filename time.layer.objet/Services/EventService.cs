@@ -108,8 +108,7 @@ namespace time.layer.objet.Services
                 Guid = Guid.NewGuid().ToString(),
                 Name = model.Name,
                 Ticket = model.Ticket,
-                Project = model.Project,
-                Key = model.Key,
+                AliasId = model.AliasId,
                 Description = model.Description,
                 IsJira = model.IsJira,
                 Start = start,
@@ -175,16 +174,10 @@ namespace time.layer.objet.Services
 
             foreach (var dayPair in events)
             {
-                var dayEvents = dayPair.Value.Where(e => e.IsJira && string.IsNullOrEmpty(e.Ticket) && !string.IsNullOrEmpty(e.Name));
+                var dayEvents = dayPair.Value.Where(e => e.IsJira && string.IsNullOrEmpty(e.Ticket) && e.AliasId is null && !string.IsNullOrEmpty(e.Name));
 
                 foreach (var trackerEvent in dayEvents)
                 {
-                    if (string.IsNullOrEmpty(trackerEvent.Key))
-                    {
-                        trackerEvent.Key = trackerEvent.Name;
-                        UpdateEvent(trackerEvent);
-                    }
-
                     if (trackerEvent.Name == "Pause")
                     {
                         trackerEvent.IsJira = false;
@@ -194,15 +187,45 @@ namespace time.layer.objet.Services
 
                     if (config != null && config.aliases != null)
                     {
-                        var alias = config.aliases.FirstOrDefault(a => a.name == trackerEvent.Key);
+                        var alias = config.aliases.FirstOrDefault(a => a.name == trackerEvent.Name);
 
                         if (alias != null)
                         {
+                            trackerEvent.AliasId = alias.id;
+                            trackerEvent.Name = alias.name;
                             trackerEvent.Ticket = alias.value;
                             UpdateEvent(trackerEvent);
                         }
                     }
                 }
+
+                if (config != null && config.aliases != null)
+                {
+                    var aliasEvents = dayPair.Value.Where(e => e.AliasId is not null && e.AliasId > 0);
+
+                    foreach (var trackerEvent in aliasEvents)
+                    {
+                        var alias = config.aliases.FirstOrDefault(a => a.id == trackerEvent.AliasId);
+
+                        if (alias is not null && alias.value == trackerEvent.Ticket && alias.name == trackerEvent.Name)
+                        {
+                            continue;
+                        }
+
+                        if (alias is not null)
+                        {
+                            trackerEvent.Name = alias.name;
+                            trackerEvent.Ticket = alias.value;
+                        }
+                        else
+                        {
+                            trackerEvent.AliasId = null;
+                        }
+
+                        UpdateEvent(trackerEvent);
+                    }
+                }
+
             }
 
             return events;

@@ -14,6 +14,7 @@ namespace time.layer.objet.Objets
         public string project { get; set; }
         public bool autoStart { get; set; }
         public bool session { get; set; }
+        public TimeSpan dayDuration { get; set; } = TimeSpan.Zero;
 
         public List<TrackerKey> keys { get; set; }
 
@@ -28,6 +29,7 @@ namespace time.layer.objet.Objets
 
         public class Alias
         {
+            public int id { get; set; }
             public string name { get; set; }
             public string value { get; set; }
 

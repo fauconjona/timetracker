@@ -47,14 +47,14 @@
             // 
             // eventName
             // 
-            eventName.Location = new Point(433, 41);
+            eventName.Location = new Point(452, 41);
             eventName.Name = "eventName";
-            eventName.Size = new Size(154, 23);
+            eventName.Size = new Size(163, 23);
             eventName.TabIndex = 1;
             // 
             // submit
             // 
-            submit.Location = new Point(390, 99);
+            submit.Location = new Point(418, 99);
             submit.Name = "submit";
             submit.Size = new Size(197, 26);
             submit.TabIndex = 2;
@@ -82,7 +82,7 @@
             // 
             // dateTimeEnd
             // 
-            dateTimeEnd.Location = new Point(387, 12);
+            dateTimeEnd.Location = new Point(415, 12);
             dateTimeEnd.Name = "dateTimeEnd";
             dateTimeEnd.Size = new Size(200, 23);
             dateTimeEnd.TabIndex = 5;
@@ -99,7 +99,7 @@
             // endLabel
             // 
             endLabel.AutoSize = true;
-            endLabel.Location = new Point(352, 18);
+            endLabel.Location = new Point(378, 18);
             endLabel.Name = "endLabel";
             endLabel.Size = new Size(29, 15);
             endLabel.TabIndex = 7;
@@ -110,7 +110,7 @@
             typeComboBox.FormattingEnabled = true;
             typeComboBox.Location = new Point(52, 41);
             typeComboBox.Name = "typeComboBox";
-            typeComboBox.Size = new Size(155, 23);
+            typeComboBox.Size = new Size(222, 23);
             typeComboBox.TabIndex = 8;
             typeComboBox.SelectedIndexChanged += typeComboBox_SelectedIndexChanged;
             // 
@@ -126,7 +126,7 @@
             // ticketLabel
             // 
             ticketLabel.AutoSize = true;
-            ticketLabel.Location = new Point(213, 44);
+            ticketLabel.Location = new Point(280, 44);
             ticketLabel.Name = "ticketLabel";
             ticketLabel.Size = new Size(41, 15);
             ticketLabel.TabIndex = 10;
@@ -134,15 +134,15 @@
             // 
             // ticketTextBox
             // 
-            ticketTextBox.Location = new Point(260, 41);
+            ticketTextBox.Location = new Point(327, 41);
             ticketTextBox.Name = "ticketTextBox";
-            ticketTextBox.Size = new Size(128, 23);
+            ticketTextBox.Size = new Size(80, 23);
             ticketTextBox.TabIndex = 11;
             // 
             // ticletLabel
             // 
             ticletLabel.AutoSize = true;
-            ticletLabel.Location = new Point(394, 44);
+            ticletLabel.Location = new Point(413, 44);
             ticletLabel.Name = "ticletLabel";
             ticletLabel.Size = new Size(33, 15);
             ticletLabel.TabIndex = 12;
@@ -152,7 +152,7 @@
             // 
             descriptionTextBox.Location = new Point(88, 70);
             descriptionTextBox.Name = "descriptionTextBox";
-            descriptionTextBox.Size = new Size(500, 23);
+            descriptionTextBox.Size = new Size(527, 23);
             descriptionTextBox.TabIndex = 13;
             // 
             // descriptionLabel
@@ -169,7 +169,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoValidate = AutoValidate.EnablePreventFocusChange;
-            ClientSize = new Size(600, 133);
+            ClientSize = new Size(627, 133);
             ControlBox = false;
             Controls.Add(descriptionLabel);
             Controls.Add(descriptionTextBox);

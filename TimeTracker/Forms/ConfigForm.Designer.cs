@@ -48,12 +48,14 @@
             saveButton = new Button();
             cancelButton = new Button();
             groupBox3 = new GroupBox();
+            dayDurationTimePicker = new DateTimePicker();
+            dayDurationLabel = new Label();
             sessionCheckBox = new CheckBox();
             autoStartCheckBox = new CheckBox();
             AliasesGroupBox = new GroupBox();
+            aliasesTreeView = new TreeView();
             deleteAliasButton = new Button();
             addAliasButton = new Button();
-            AliasesListBox = new ListBox();
             groupBox1.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -70,7 +72,7 @@
             groupBox1.Controls.Add(jiraLoginLabel);
             groupBox1.Controls.Add(jiraUrlTextBox);
             groupBox1.Controls.Add(jiraUrlLabel);
-            groupBox1.Location = new Point(12, 79);
+            groupBox1.Location = new Point(12, 113);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(478, 130);
             groupBox1.TabIndex = 0;
@@ -149,9 +151,9 @@
             groupBox2.Controls.Add(startShortcutTextBox);
             groupBox2.Controls.Add(editShortcutLabel);
             groupBox2.Controls.Add(startShortcutLabel);
-            groupBox2.Location = new Point(259, 215);
+            groupBox2.Location = new Point(262, 249);
             groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(231, 154);
+            groupBox2.Size = new Size(228, 154);
             groupBox2.TabIndex = 1;
             groupBox2.TabStop = false;
             groupBox2.Text = "Raccourcis clavier";
@@ -206,7 +208,7 @@
             // 
             // saveButton
             // 
-            saveButton.Location = new Point(331, 375);
+            saveButton.Location = new Point(331, 409);
             saveButton.Name = "saveButton";
             saveButton.Size = new Size(159, 23);
             saveButton.TabIndex = 2;
@@ -216,7 +218,7 @@
             // 
             // cancelButton
             // 
-            cancelButton.Location = new Point(12, 375);
+            cancelButton.Location = new Point(12, 409);
             cancelButton.Name = "cancelButton";
             cancelButton.Size = new Size(159, 23);
             cancelButton.TabIndex = 3;
@@ -226,14 +228,33 @@
             // 
             // groupBox3
             // 
+            groupBox3.Controls.Add(dayDurationTimePicker);
+            groupBox3.Controls.Add(dayDurationLabel);
             groupBox3.Controls.Add(sessionCheckBox);
             groupBox3.Controls.Add(autoStartCheckBox);
             groupBox3.Location = new Point(12, 7);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(478, 66);
+            groupBox3.Size = new Size(478, 100);
             groupBox3.TabIndex = 4;
             groupBox3.TabStop = false;
             groupBox3.Text = "Tracker";
+            // 
+            // dayDurationTimePicker
+            // 
+            dayDurationTimePicker.CustomFormat = "HH:mm";
+            dayDurationTimePicker.Location = new Point(126, 63);
+            dayDurationTimePicker.Name = "dayDurationTimePicker";
+            dayDurationTimePicker.Size = new Size(61, 23);
+            dayDurationTimePicker.TabIndex = 3;
+            // 
+            // dayDurationLabel
+            // 
+            dayDurationLabel.AutoSize = true;
+            dayDurationLabel.Location = new Point(6, 69);
+            dayDurationLabel.Name = "dayDurationLabel";
+            dayDurationLabel.Size = new Size(117, 15);
+            dayDurationLabel.TabIndex = 2;
+            dayDurationLabel.Text = "Durée d'une journée:";
             // 
             // sessionCheckBox
             // 
@@ -257,15 +278,23 @@
             // 
             // AliasesGroupBox
             // 
+            AliasesGroupBox.Controls.Add(aliasesTreeView);
             AliasesGroupBox.Controls.Add(deleteAliasButton);
             AliasesGroupBox.Controls.Add(addAliasButton);
-            AliasesGroupBox.Controls.Add(AliasesListBox);
-            AliasesGroupBox.Location = new Point(12, 215);
+            AliasesGroupBox.Location = new Point(12, 249);
             AliasesGroupBox.Name = "AliasesGroupBox";
             AliasesGroupBox.Size = new Size(241, 154);
             AliasesGroupBox.TabIndex = 5;
             AliasesGroupBox.TabStop = false;
             AliasesGroupBox.Text = "Alias";
+            // 
+            // aliasesTreeView
+            // 
+            aliasesTreeView.Location = new Point(7, 22);
+            aliasesTreeView.Name = "aliasesTreeView";
+            aliasesTreeView.Size = new Size(228, 97);
+            aliasesTreeView.TabIndex = 3;
+            aliasesTreeView.NodeMouseDoubleClick += aliasesTreeView_NodeMouseDoubleClick;
             // 
             // deleteAliasButton
             // 
@@ -287,21 +316,11 @@
             addAliasButton.UseVisualStyleBackColor = true;
             addAliasButton.Click += addAliasButton_Click;
             // 
-            // AliasesListBox
-            // 
-            AliasesListBox.FormattingEnabled = true;
-            AliasesListBox.ItemHeight = 15;
-            AliasesListBox.Location = new Point(6, 22);
-            AliasesListBox.Name = "AliasesListBox";
-            AliasesListBox.Size = new Size(228, 94);
-            AliasesListBox.TabIndex = 0;
-            AliasesListBox.DoubleClick += AliasesListBox_DoubleClick;
-            // 
             // ConfigForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(505, 410);
+            ClientSize = new Size(505, 444);
             ControlBox = false;
             Controls.Add(AliasesGroupBox);
             Controls.Add(groupBox3);
@@ -350,8 +369,10 @@
         private CheckBox sessionCheckBox;
         private CheckBox autoStartCheckBox;
         private GroupBox AliasesGroupBox;
-        private ListBox AliasesListBox;
         private Button addAliasButton;
         private Button deleteAliasButton;
+        private TreeView aliasesTreeView;
+        private DateTimePicker dayDurationTimePicker;
+        private Label dayDurationLabel;
     }
 }

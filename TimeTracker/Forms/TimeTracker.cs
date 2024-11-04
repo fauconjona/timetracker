@@ -59,10 +59,29 @@ namespace TimeTracker
 
             treeView1.Nodes.Clear();
             Dictionary<DateTime, List<TrackerEvent>> events = eventService.GetEvents();
+            var config = eventService.GetConfig();
             foreach (var day in events)
             {
-                var node = treeView1.Nodes.Add(day.Key.ToString("D"));
+                TimeSpan dayDuration = new(day.Value.Sum(e => e.Duration.Ticks));
+                var node = treeView1.Nodes.Add($"{day.Key.ToString("D")} ({dayDuration.ToString(@"hh\:mm")})");
                 node.Tag = day.Key;
+                
+                if (day.Key == DateTime.Today)
+                {
+                    node.ForeColor = Color.Orange;
+                }
+                else if (config is not null && config.dayDuration != TimeSpan.Zero)
+                {
+                    if (dayDuration >= config.dayDuration)
+                    {
+                        node.ForeColor = Color.Green;
+                    }
+                    else if (dayDuration < config.dayDuration)
+                    {
+                        node.ForeColor = Color.OrangeRed;
+                    }
+                }
+
                 var dayEvents = day.Value.OrderBy(e => e.Start).ToList();
                 foreach (var trackerEvent in dayEvents)
                 {

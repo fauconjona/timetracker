@@ -13,12 +13,14 @@ namespace TimeTracker.Forms
     public partial class AliasForm : Form
     {
         private readonly ConfigForm ConfigForm;
+        private readonly int? AliasId;
         private readonly string AliasName;
         private readonly string AliasValue;
 
-        public AliasForm(ConfigForm configForm, string name = "", string value = "")
+        public AliasForm(ConfigForm configForm, int? id = null, string name = "", string value = "")
         {
             this.ConfigForm = configForm;
+            this.AliasId = id;
             this.AliasName = name;
             this.AliasValue = value;
             InitializeComponent();
@@ -112,7 +114,7 @@ namespace TimeTracker.Forms
         {
             ConfigForm.Invoke(() =>
             {
-                ConfigForm.AddAlias(nameTextBox.Text, valueTextBox.Text);
+                ConfigForm.AddAlias(AliasId, nameTextBox.Text, valueTextBox.Text);
             });
 
             this.Close();

@@ -1,4 +1,0 @@
-- Associer chaque alias a un Id unique
-- Faire un lien entre un event et un alias nullable
-- Quand un event est associé a un alias, il n'a pas besoin de Name et ticket
-- Dans la config, réussir à faire le lien entre un élément de la liste et un id

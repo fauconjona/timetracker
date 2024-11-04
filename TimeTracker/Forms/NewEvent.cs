@@ -42,7 +42,7 @@ namespace TimeTracker
                 aliases = config.aliases.ToList();
                 foreach (var alias in aliases)
                 {
-                    typeComboBox.Items.Add(alias.name);
+                    typeComboBox.Items.Add(alias.ToString());
                 }
             }
 
@@ -75,10 +75,27 @@ namespace TimeTracker
                 ticketTextBox.Text = trackerEvent.Ticket;
                 descriptionTextBox.Text = trackerEvent.Description;
 
-                if (aliases.Any(a => a.name == trackerEvent.Key))
+                if (trackerEvent.AliasId is not null)
                 {
-                    typeComboBox.SelectedItem = trackerEvent.Key;
-                    HandleTypeChange(trackerEvent.Key);
+                    var alias = aliases.FirstOrDefault(a => a.id == trackerEvent.AliasId);
+
+                    if (alias is not null)
+                    {
+                        typeComboBox.SelectedItem = alias.ToString();
+                        HandleTypeChange(alias.id);
+                    }
+                    else
+                    {
+                        typeComboBox.SelectedItem = "Ticket";
+                    }
+                }
+                else if (!trackerEvent.IsJira)
+                {
+                    typeComboBox.SelectedItem = "Pause";
+                }
+                else
+                {
+                    typeComboBox.SelectedItem = "Ticket";
                 }
 
                 if (isEdit)
@@ -124,22 +141,22 @@ namespace TimeTracker
                     return;
                 }
                 trackerEvent.Ticket = ticket;
-                trackerEvent.Key = ticket;
+                trackerEvent.AliasId = null;
                 trackerEvent.Name = eventName.Text;
                 trackerEvent.IsJira = true;
             }
             else if (selectedType == "Pause")
             {
-                trackerEvent.Key = "Pause";
+                trackerEvent.AliasId = null;
                 trackerEvent.IsJira = false;
                 trackerEvent.Ticket = string.Empty;
                 trackerEvent.Name = "Pause";
             }
             else if (!string.IsNullOrEmpty(selectedType))
             {
-                var alias = aliases.FirstOrDefault(a => a.name == selectedType);
-                trackerEvent.Key = alias is not null ? alias.name : string.Empty;
-                trackerEvent.Ticket = alias is not null ? alias.value : string.Empty;
+                var alias = aliases.FirstOrDefault(a => a.ToString() == selectedType);
+                trackerEvent.AliasId = alias?.id ?? null;
+                trackerEvent.Ticket = alias?.value ?? string.Empty;
                 trackerEvent.Name = eventName.Text;
                 trackerEvent.IsJira = true;
             }
@@ -180,39 +197,47 @@ namespace TimeTracker
 
         private void typeComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            HandleTypeChange(typeComboBox.SelectedItem.ToString());
-        }
-
-        private void HandleTypeChange(string key)
-        {
-            if (key == "Ticket")
+            var aliasSelected = typeComboBox.SelectedItem.ToString();
+            if (aliasSelected != "Ticket" && aliasSelected != "Pause")
+            {
+                var alias = aliases.FirstOrDefault(a => a.ToString() == aliasSelected);
+                if (alias is not null)
+                {
+                    HandleTypeChange(alias.id);
+                }
+            }
+            else if (aliasSelected == "Ticket")
             {
                 ticketTextBox.Enabled = true;
-                eventName.Enabled = true;
-            }
-            else if (key == "Pause")
-            {
                 ticketTextBox.Text = string.Empty;
+                eventName.Enabled = true;
+                eventName.Text = string.Empty;
+            }
+            else if (aliasSelected == "Pause")
+            {
                 ticketTextBox.Enabled = false;
+                ticketTextBox.Text = string.Empty;
+                eventName.Enabled = false;
                 eventName.Text = "Pause";
+            }
+        }
+
+        private void HandleTypeChange(int aliasId)
+        {
+            var alias = aliases.FirstOrDefault(a => a.id == aliasId);
+
+            if (alias != null)
+            {
+                ticketTextBox.Text = alias.value;
+                ticketTextBox.Enabled = false;
+                eventName.Text = alias.name;
                 eventName.Enabled = false;
             }
             else
             {
-                var alias = aliases.FirstOrDefault(a => a.name == key);
-                if (alias != null)
-                {
-                    ticketTextBox.Text = alias.value;
-                    ticketTextBox.Enabled = false;
-                    eventName.Text = alias.name;
-                    eventName.Enabled = true;
-                }
-                else
-                {
-                    // Ticket
-                    ticketTextBox.Enabled = true;
-                    eventName.Enabled = true;
-                }
+                // Ticket
+                ticketTextBox.Enabled = true;
+                eventName.Enabled = true;
             }
         }
     }

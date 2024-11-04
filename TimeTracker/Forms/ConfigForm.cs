@@ -34,6 +34,10 @@ namespace TimeTracker.Forms
 
         private void ConfigForm_Load(object sender, EventArgs e)
         {
+            dayDurationTimePicker.Format = DateTimePickerFormat.Custom;
+            dayDurationTimePicker.ShowUpDown = true;
+            dayDurationTimePicker.Value = DateTime.Today.Add(new TimeSpan(7, 45, 0));
+
             var config = eventService.GetConfig();
 
             if (config != null)
@@ -64,6 +68,11 @@ namespace TimeTracker.Forms
                     cancelShortcutTextBox.Text = cancelKey.value;
                 }
 
+                if (config!.dayDuration != TimeSpan.Zero)
+                {
+                    dayDurationTimePicker.Value = DateTime.Today.Add(config.dayDuration);
+                }
+
                 RefreshAliases(config!);
             }
         }
@@ -78,6 +87,7 @@ namespace TimeTracker.Forms
                 project = jiraProjectTextBox.Text,
                 autoStart = autoStartCheckBox.Checked,
                 session = sessionCheckBox.Checked,
+                dayDuration = dayDurationTimePicker.Value.TimeOfDay,
                 keys = new List<TrackerConfig.TrackerKey>
                 {
                     new TrackerConfig.TrackerKey
@@ -106,6 +116,10 @@ namespace TimeTracker.Forms
             {
                 trackerManager.MigrateEvents(true);
             }
+            else
+            {
+                trackerManager.RefreshEvents();
+            }
             this.Close();
         }
 
@@ -122,28 +136,32 @@ namespace TimeTracker.Forms
 
         public void RefreshAliases(TrackerConfig? config = null)
         {
-            if (config != null && config.aliases != null) 
-            { 
+            if (config != null && config.aliases != null)
+            {
                 this.Aliases = config.aliases;
             }
 
-            this.AliasesListBox.Items.Clear();
+            this.aliasesTreeView.Nodes.Clear();
 
             foreach (var alias in this.Aliases)
             {
-                this.AliasesListBox.Items.Add(alias);
+                TreeNode node = new(alias.ToString())
+                {
+                    Tag = alias.id
+                };
+                this.aliasesTreeView.Nodes.Add(node);
             }
         }
 
-        public void AddAlias(string name, string value)
+        public void AddAlias(int? id, string name, string value)
         {
-            var index = Aliases.FindIndex(a => a.name == name);
-
-            if (index < 0)
+            if (id is null)
             {
+                var maxId = Aliases.Count > 0 ? Aliases.Max(a => a.id) : 0;
                 Aliases.Add(
                     new TrackerConfig.Alias
                     {
+                        id = maxId + 1,
                         name = name,
                         value = value
                     }
@@ -151,7 +169,12 @@ namespace TimeTracker.Forms
             }
             else
             {
-                Aliases[index].value = value;
+                var index = Aliases.FindIndex(a => a.id == id);
+                if (index >= 0)
+                {
+                    Aliases[index].name = name;
+                    Aliases[index].value = value;
+                }
             }
 
             aliasesChanged = true;
@@ -175,11 +198,8 @@ namespace TimeTracker.Forms
 
         private void deleteAliasButton_Click(object sender, EventArgs e)
         {
-            var index = this.AliasesListBox.SelectedIndex;
-
-            if (index == -1) return;
-
-            var alias = this.Aliases[index];
+            var id = (int)this.aliasesTreeView.SelectedNode.Tag;
+            var alias = Aliases.FirstOrDefault(a => a.id == id);
             if (alias != null)
             {
                 RemoveAlias(alias.name);
@@ -190,17 +210,12 @@ namespace TimeTracker.Forms
             }
         }
 
-        private void AliasesListBox_DoubleClick(object sender, EventArgs e)
+        private void aliasesTreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            var index = this.AliasesListBox.SelectedIndex;
-
-            if (index == -1) return;
-
-            var alias = this.Aliases[index];
-            if (alias != null)
-            {
-                Console.WriteLine(alias.ToString());
-                var aliasForm = new AliasForm(this, alias.name, alias.value);
+            var id = (int)e.Node.Tag;
+            var alias = Aliases.FirstOrDefault(a => a.id == id);
+            if (alias != null) {
+                var aliasForm = new AliasForm(this, alias.id, alias.name, alias.value);
                 aliasForm.ShowDialog();
             }
             else

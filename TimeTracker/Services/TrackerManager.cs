@@ -121,10 +121,7 @@ namespace TimeTracker.Services
         public void Create(TrackerEvent trackerEvent)
         {
             eventService.AddEvent(trackerEvent);
-            form?.Invoke(new Action(() =>
-            {
-                form?.RefreshEvents();
-            }));
+            RefreshEvents();
             RefreshButtons();
         }
 
@@ -268,11 +265,16 @@ namespace TimeTracker.Services
 
             if (refresh)
             {
-                form?.Invoke(new Action(() =>
-                {
-                    form?.RefreshEvents();
-                }));
+                RefreshEvents();
             }
+        }
+
+        public void RefreshEvents()
+        {
+            form?.Invoke(new Action(() =>
+            {
+                form?.RefreshEvents();
+            }));
         }
 
         #region private methods
@@ -293,7 +295,7 @@ namespace TimeTracker.Services
                     Guid = Guid.NewGuid().ToString(),
                     Start = sessionLock!.Value,
                     End = DateTime.Now,
-                    Key = "Pause",
+                    AliasId = null,
                     Name = "Pause",
                     IsJira = false
                 };
@@ -319,8 +321,7 @@ namespace TimeTracker.Services
                             Guid = Guid.NewGuid().ToString(),
                             Start = DateTime.Now,
                             Name = lastEvent!.Name,
-                            Key = lastEvent.Key,
-                            Project = lastEvent.Project,
+                            AliasId = lastEvent.AliasId,
                             Ticket = lastEvent.Ticket,
                             Description = lastEvent.Description,
                             IsJira = lastEvent.IsJira
@@ -329,10 +330,7 @@ namespace TimeTracker.Services
                     else
                     {
                         eventService.DeleteEvent(lastEvent!);
-                        form?.Invoke(new Action(() =>
-                        {
-                            form.RefreshEvents();
-                        }));
+                        RefreshEvents();
                         currentEvent = lastEvent!;
                         currentEvent.End = null;
                     }

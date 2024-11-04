@@ -83,5 +83,10 @@ namespace TimeTracker.Interfaces
         /// </summary>
         /// <param name="refresh">Refresh event list</param>
         void MigrateEvents(bool refresh = false);
+
+        /// <summary>
+        /// Refresh events
+        /// </summary>
+        void RefreshEvents();
     }
 }
